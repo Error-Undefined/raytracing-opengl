@@ -7,9 +7,16 @@ struct vector3
   double x, y, z;
 };
 
+struct uchar_vector3
+{
+  unsigned char r, g, b;
+};
+
 typedef struct vector3 vec3;
 typedef struct vector3 point3;
 typedef struct vector3 color;
+
+typedef struct uchar_vector3 int_color;
 
 void vec3_copy_into(struct vector3* to, struct vector3* from);
 

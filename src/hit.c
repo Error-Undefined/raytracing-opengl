@@ -27,10 +27,10 @@ bool hit_sphere(sphere* s, ray* r, double t_min, double t_max, hit_record* rec)
   // Try and see if any of the two roots are in the acceptable range
   double sqrtd = sqrt(discriminant);
 
-  double root = (-half_b + sqrtd)/a;
+  double root = (-half_b - sqrtd)/a;
   if (root < t_min || root > t_max)
   {
-    root = (-half_b - sqrtd)/a;
+    root = (-half_b + sqrtd)/a;
     if (root < t_min || root > t_max)
     {
       return false;

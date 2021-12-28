@@ -67,7 +67,6 @@ double vec3_dot(struct vector3 *u, struct vector3 *v)
   return u->x*v->x + u->y*v->y + u->z*v->z;
 }
 
-
 double vec3_len(struct vector3 *u)
 {
   return sqrt(vec3_dot(u, u));

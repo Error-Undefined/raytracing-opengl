@@ -3,6 +3,16 @@
 
 #include "vector3.h"
 
-int write_file(const char* path, color** color_data, int height, int width);
+struct write_file_args
+{
+    const char* path; 
+    int_color* color_data; 
+    int height;
+    int width;
+
+    int result;
+};
+
+void* write_file(void* args);
 
 #endif //FILEOUT_H

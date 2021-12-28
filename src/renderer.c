@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>
+#include <pthread.h>
 
 #include "renderer.h"
 
@@ -18,9 +19,10 @@
 #include "hit.h"
 #include "hittable_list.h"
 #include "scatter.h"
+#include "graphics/graphics.h"
 
 #define RAYTRACE_INFINITY DBL_MAX
-#define RANDOM_SCENE 1
+//#define RANDOM_SCENE 1
 
 
 static void make_triangle_norm(triangle* t)
@@ -34,6 +36,7 @@ static void make_triangle_norm(triangle* t)
   t->normal = vec3_cross_new(&edge0, &edge1);
   vec3_norm(&t->normal);
 }
+
 
 static color ray_color(hittable_list* world, ray* r, int depth)
 { 
@@ -105,6 +108,53 @@ ray get_ray(double u, double v, double aperture, vec3* camera_center, vec3* uppe
   //r.dir -= offset
   vec3_sub(&r.direction, &random_offset);
   return r;
+}
+
+static void* compute_rays(void* args)
+{
+  struct compute_rays_args* a = (struct compute_rays_args*) args;
+  int w = a->w;
+  int h = a->h;
+  int samples_per_pixel = a->samples_per_pixel;
+  int_color* image_buf = a->img_buf;
+  int ray_depth = a->ray_depth;
+
+  double aperture = a->aperture;
+
+  vec3* camera_center = a->camera_center;
+  vec3* upper_left = a->upper_left;
+  vec3* horizontal = a->horizontal;
+  vec3* vertical = a->vertical;
+  vec3* unit_horizontal = a->unit_horizontal;
+  vec3* unit_vertical = a->unit_vertical;
+
+  hittable_list* world = a->world;
+
+  for(int cur_h = 0; cur_h < h; cur_h++)
+  {
+    double progress = cur_h * 1.0 / h * 100;
+    printf("Progress: %.2f%%\n", progress);
+    for (int cur_w = 0; cur_w < w; cur_w++)
+    {
+      color c = {0,0,0};
+      for (int s = 0; s < samples_per_pixel; s++)
+      { 
+        double u = (cur_w*1.0 + random_double())/(w - 1.0);
+        double v = (cur_h*1.0 + random_double())/(h - 1.0);
+
+        ray r = get_ray(u, v, aperture, camera_center, upper_left, horizontal, vertical, unit_horizontal, unit_vertical);
+        
+        color sample_color = ray_color(world, &r, ray_depth);
+        vec3_add(&c, &sample_color);
+      }
+      vec3_mul(&c, 1.0/samples_per_pixel);
+      //Sqrt for gamma correction
+      image_buf[cur_h*w + cur_w].r = sqrt(c.x)*255.999;
+      image_buf[cur_h*w + cur_w].g = sqrt(c.y)*255.999;
+      image_buf[cur_h*w + cur_w].b = sqrt(c.z)*255.999;
+    }
+  }
+  return NULL;
 }
 
 void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* camera)
@@ -253,7 +303,7 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   ground_sphere.albedo = (vec3) {0.5, 0.5, 0.5};
   ground_sphere.fuzz_or_refraction = 1;
 
-  hittable_list* world_random = init_hittable_list(&ground_sphere, hittable_sphere);
+  hittable_list* world = init_hittable_list(&ground_sphere, hittable_sphere);
 
   sphere sphere_list[22*22];
   int spere_list_it = 0;
@@ -292,7 +342,7 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
           sphere_pointer->material = dielectric_material;
           sphere_pointer->fuzz_or_refraction = random_range_double(1.1, 1.7);
         }
-        add_hittable_object(world_random, sphere_pointer, hittable_sphere);
+        add_hittable_object(world, sphere_pointer, hittable_sphere);
         spere_list_it++;
       }
     }
@@ -319,19 +369,37 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   example3.radius = 1;
   example3.fuzz_or_refraction = 1.5;
 
-  add_hittable_object(world_random, &example1, hittable_sphere);
-  add_hittable_object(world_random, &example2, hittable_sphere);
-  add_hittable_object(world_random, &example3, hittable_sphere);
+  add_hittable_object(world, &example1, hittable_sphere);
+  add_hittable_object(world, &example2, hittable_sphere);
+  add_hittable_object(world, &example3, hittable_sphere);
 
   #endif // RANDOM_SCENE
 
   // Allocate the image buffer
-  color** image_buf = calloc(h, sizeof(color*));
-  for (int i = 0; i < h; i++)
-  {
-    image_buf[i] = calloc(w, sizeof(color));
-  }
+  int_color* image_buf = calloc(h*w, sizeof(int_color));
 
+  pthread_t compute_thread;
+
+  struct compute_rays_args compute_args;
+  struct compute_rays_args* a = &compute_args;
+
+  a->w = w;
+  a->h = h;
+  a->samples_per_pixel = samples_per_pixel;
+  a->img_buf = image_buf;
+  a->ray_depth = ray_depth;
+  a->aperture = aperture;
+
+  a->camera_center = &camera_center;
+  a->upper_left = &upper_left;
+  a->horizontal = &horizontal;
+  a->vertical = &vertical;
+  a->unit_horizontal = &unit_horizontal;
+  a->unit_vertical = &unit_vertical;
+
+  a->world = world;
+  
+  /*
   //Render loop
   for(int cur_h = 0; cur_h < h; cur_h++)
   {
@@ -356,17 +424,39 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
       }
       vec3_mul(&c, 1.0/samples_per_pixel);
       //Sqrt for gamma correction
-      image_buf[cur_h][cur_w].x = sqrt(c.x);
-      image_buf[cur_h][cur_w].y = sqrt(c.y);
-      image_buf[cur_h][cur_w].z = sqrt(c.z);
+      image_buf[cur_h*w + cur_w].r = sqrt(c.x)*255.999;
+      image_buf[cur_h*w + cur_w].g = sqrt(c.y)*255.999;
+      image_buf[cur_h*w + cur_w].b = sqrt(c.z)*255.999;
     }
   }
-  int file_result = write_file("render.ppm", image_buf, h, w);
-  printf("Rendering finished with code %d\n", file_result);
+  */
+  s_graphics g;
+  g.img_width = w;
+  g.img_height = h;
+  g.img_data = image_buf;
 
-  for (int i = 0; i < h; i++)
-  {
-    free(image_buf[i]);
-  }
+
+  pthread_create(&compute_thread, NULL, compute_rays, a);
+
+  create_graphics(&g, w, h);
+  render_graphics(&g);
+
+
+  pthread_join(compute_thread, NULL);
+
+  struct write_file_args write_file_args;
+  write_file_args.color_data = image_buf;
+  write_file_args.height = h;
+  write_file_args.width = w;
+  write_file_args.path = "render.ppm";
+  write_file_args.result = 5;
+
+  write_file(&write_file_args);
+  render_graphics(&g);
+
+  printf("Rendering finished with code %d\n", write_file_args.result);
+
   free(image_buf);
 }
+
+

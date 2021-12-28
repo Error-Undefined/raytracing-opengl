@@ -3,14 +3,22 @@
 #include "fileout.h"
 #include "vector3.h"
 
-int write_file(const char* path, color** color_data, int height, int width)
+void* write_file(void* args)
 {
+  struct write_file_args* args_cast = (struct write_file_args*) args;
+
+  const char* path = args_cast->path;
+  int_color* color_data = args_cast->color_data;
+  int height = args_cast->height;
+  int width = args_cast->width;
+
   FILE* fp;
   fp = fopen(path, "w+");
 
   if (fp == NULL)
   {
-    return 1;
+    args_cast->result = -1;
+    return NULL;
   }
   //Write .ppm file header
   fputs("P3\n", fp);
@@ -20,13 +28,14 @@ int write_file(const char* path, color** color_data, int height, int width)
   {
     for(int w = 0;  w < width; w++)
     {
-      int r = (int) (color_data[h][w].x * 255.999);
-      int g = (int) (color_data[h][w].y * 255.999);
-      int b = (int) (color_data[h][w].z * 255.999);
+      int r = (int) (color_data[h*width + w].r);
+      int g = (int) (color_data[h*width + w].g);
+      int b = (int) (color_data[h*width + w].b);
       fprintf(fp, "%d %d %d\n", r, g, b);
     }
   }
 
   fclose(fp);
-  return 0;
+  args_cast->result = 0;
+  return NULL;
 }
