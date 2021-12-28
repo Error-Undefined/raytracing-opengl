@@ -26,6 +26,6 @@ struct compute_rays_args
 
 
 //Entry point to the renderer
-void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* camera);
+void render(int threads, int h, int w, int samples_per_pixel, int ray_depth, struct camera* camera);
 
 #endif

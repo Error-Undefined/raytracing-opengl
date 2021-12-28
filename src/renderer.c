@@ -172,7 +172,7 @@ static void* compute_rays(void* args)
   return NULL;
 }
 
-void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* camera)
+void render(int threads, int h, int w, int samples_per_pixel, int ray_depth, struct camera* camera)
 {
   // Seed the RNG
   srand(1);
@@ -426,7 +426,7 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
 
   a->world = world;
 
-  int thread_count = 10;
+  int thread_count = threads;
 
   a->thread_count = thread_count;
   a->index_start = 0;

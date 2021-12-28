@@ -16,8 +16,9 @@ int main(int argc, char** argv)
   ProfilerStart("test.log");
   #endif //PROFILE_CODE
 
-  int samples_per_pixel = 200;
+  int samples_per_pixel = 32;
   int ray_depth = 30;
+  int threads = 6;
 
   struct camera c;
   c.focal_length = 1;
@@ -33,7 +34,7 @@ int main(int argc, char** argv)
   if (argc < 3)
   { 
     //Render for example at 16:9 ratio, 800x450 now
-    render(450, 800, 70, 10, NULL);
+    render(threads, 450, 800, 70, 10, NULL);
     int t1 = time(NULL);
     printf("Rendering took %d seconds\n", t1-t0);
     exit(0);
@@ -45,7 +46,7 @@ int main(int argc, char** argv)
     printf("Could not parse command line args\n");
     exit(1);
   }
-  render(h, w, samples_per_pixel, ray_depth, &c);
+  render(threads, h, w, samples_per_pixel, ray_depth, &c);
   int t1 = time(NULL);
   printf("Rendering took %d seconds\n", t1-t0);
 
