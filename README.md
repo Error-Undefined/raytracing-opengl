@@ -5,7 +5,9 @@ Starting a small project of a raytracer written in C.
 Following raytracing in a weekend: https://raytracing.github.io/books/RayTracingInOneWeekend.html
 
 ## Building and running
-Apart from make, there are no other dependencies for the project.
+You will need the following to run:
+- GLFW
+- OpenGL (4.1 or higher)
 
 To build, simply do 
 
@@ -28,7 +30,3 @@ The render will be created as a .ppm file, `render.ppm`
 - Camera that also emulates a thin lens and expresses depth of field through an aperture and focus distance.
 - Any resolution or aspect ratio for the output image
 
-## Example render
-Example render using a ray depth of 30, 100 samples per pixel, at a resolution of 1280x720:
-
-![Example render](./example.jpg)
