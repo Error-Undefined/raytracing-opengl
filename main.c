@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   ProfilerStart("test.log");
   #endif //PROFILE_CODE
 
-  int samples_per_pixel = 100;
+  int samples_per_pixel = 200;
   int ray_depth = 30;
 
   struct camera c;

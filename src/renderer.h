@@ -3,6 +3,7 @@
 
 #include "vector3.h"
 #include "hittable_list_threadsafe.h"
+#include "graphics/graphics.h"
 #include "../camera.h"
 
 struct compute_rays_args
@@ -17,6 +18,9 @@ struct compute_rays_args
   vec3 *camera_center, *upper_left, *horizontal, *vertical, *unit_horizontal, *unit_vertical;
 
   hittable_list_ts* world;
+
+  int thread_count;
+  int index_start;
 };
 
 

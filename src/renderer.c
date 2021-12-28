@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>
+
+#include <GLFW/glfw3.h>
+
 #include <pthread.h>
 
 #include "renderer.h"
@@ -20,10 +23,9 @@
 //#include "hittable_list.h"
 #include "hittable_list_threadsafe.h"
 #include "scatter.h"
-#include "graphics/graphics.h"
 
 #define RAYTRACE_INFINITY DBL_MAX
-//#define RANDOM_SCENE 1
+#define RANDOM_SCENE 1
 
 
 static void make_triangle_norm(triangle* t)
@@ -131,11 +133,21 @@ static void* compute_rays(void* args)
 
   hittable_list_ts* world = a->world;
 
+  int thread_count = a->thread_count;
+  int index_start = a->index_start;
+
+  int cur_w = index_start;
+
   for(int cur_h = 0; cur_h < h; cur_h++)
   {
-    double progress = cur_h * 1.0 / h * 100;
-    printf("Progress: %.2f%%\n", progress);
-    for (int cur_w = 0; cur_w < w; cur_w++)
+    
+    if(index_start == 0)
+    {
+      double progress = cur_h * 1.0 / h * 100;
+      printf("Progress: %.2f%%\n", progress);
+    }
+
+    while (cur_w < w)
     {
       color c = {0,0,0};
       for (int s = 0; s < samples_per_pixel; s++)
@@ -153,7 +165,9 @@ static void* compute_rays(void* args)
       image_buf[cur_h*w + cur_w].r = sqrt(c.x)*255.999;
       image_buf[cur_h*w + cur_w].g = sqrt(c.y)*255.999;
       image_buf[cur_h*w + cur_w].b = sqrt(c.z)*255.999;
+      cur_w += thread_count;
     }
+    cur_w = (cur_w % w);
   }
   return NULL;
 }
@@ -317,7 +331,8 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   ground_sphere.albedo = (vec3) {0.5, 0.5, 0.5};
   ground_sphere.fuzz_or_refraction = 1;
 
-  hittable_list* world = init_hittable_list(&ground_sphere, hittable_sphere);
+  hittable_list_ts list_struct = init_hittable_list_threadsafe(&ground_sphere, hittable_sphere, 20);
+  hittable_list_ts* world = &list_struct;
 
   sphere sphere_list[22*22];
   int spere_list_it = 0;
@@ -356,7 +371,7 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
           sphere_pointer->material = dielectric_material;
           sphere_pointer->fuzz_or_refraction = random_range_double(1.1, 1.7);
         }
-        add_hittable_object(world, sphere_pointer, hittable_sphere);
+        add_hittable_object_ts(world, sphere_pointer, hittable_sphere);
         spere_list_it++;
       }
     }
@@ -383,16 +398,14 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   example3.radius = 1;
   example3.fuzz_or_refraction = 1.5;
 
-  add_hittable_object(world, &example1, hittable_sphere);
-  add_hittable_object(world, &example2, hittable_sphere);
-  add_hittable_object(world, &example3, hittable_sphere);
+  add_hittable_object_ts(world, &example1, hittable_sphere);
+  add_hittable_object_ts(world, &example2, hittable_sphere);
+  add_hittable_object_ts(world, &example3, hittable_sphere);
 
   #endif // RANDOM_SCENE
 
   // Allocate the image buffer
   int_color* image_buf = calloc(h*w, sizeof(int_color));
-
-  pthread_t compute_thread;
 
   struct compute_rays_args compute_args;
   struct compute_rays_args* a = &compute_args;
@@ -412,6 +425,20 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   a->unit_vertical = &unit_vertical;
 
   a->world = world;
+
+  int thread_count = 10;
+
+  a->thread_count = thread_count;
+  a->index_start = 0;
+
+  pthread_t compute_thread[thread_count];
+  struct compute_rays_args compute_args_vec[thread_count];
+
+  for(int thread_it = 0; thread_it < thread_count; thread_it++)
+  {
+    compute_args_vec[thread_it] = compute_args;
+    compute_args_vec[thread_it].index_start = thread_it;
+  }
   
   /*
   //Render loop
@@ -449,14 +476,21 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   g.img_height = h;
   g.img_data = image_buf;
 
-
-  pthread_create(&compute_thread, NULL, compute_rays, a);
+  
+  for(int thread_it = 0; thread_it <thread_count; thread_it++)
+  {
+    pthread_create(&compute_thread[thread_it], NULL, compute_rays, &compute_args_vec[thread_it]);
+  }
+  
 
   create_graphics(&g, w, h);
   render_graphics(&g);
 
 
-  pthread_join(compute_thread, NULL);
+  for(int thread_it = 0; thread_it <thread_count; thread_it++)
+  {
+    pthread_join(compute_thread[thread_it], NULL);
+  }
 
   struct write_file_args write_file_args;
   write_file_args.color_data = image_buf;
