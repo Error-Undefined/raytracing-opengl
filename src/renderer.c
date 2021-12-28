@@ -436,13 +436,13 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   g.img_data = image_buf;
 
 
-  //pthread_create(&compute_thread, NULL, compute_rays, a);
+  pthread_create(&compute_thread, NULL, compute_rays, a);
 
   create_graphics(&g, w, h);
   render_graphics(&g);
 
 
-  //pthread_join(compute_thread, NULL);
+  pthread_join(compute_thread, NULL);
 
   struct write_file_args write_file_args;
   write_file_args.color_data = image_buf;
