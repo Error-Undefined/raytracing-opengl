@@ -123,6 +123,7 @@ void *render_graphics(void* v_g)
   s_graphics* g = (s_graphics*) v_g;
   while(!glfwWindowShouldClose(g->window))
   {
+    // OpenGL rendering
     glBindTexture(GL_TEXTURE_2D, g->texture_id);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0 ,g->img_width, g->img_height, GL_RGB, GL_UNSIGNED_BYTE, g->img_data);
 
@@ -130,6 +131,10 @@ void *render_graphics(void* v_g)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);    
 
     glFlush();
+
+    //GLFW window processing
+    glfwSwapBuffers(g->window);
+    glfwPollEvents();
   }
   stop_graphics(g);
 
