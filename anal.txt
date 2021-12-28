@@ -1,0 +1,361 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 31.95     13.76    13.76 11916534109     0.00     0.00  vec3_dot
+ 29.96     26.67    12.90 3967841052     0.00     0.00  hit_sphere
+ 17.36     34.14     7.48 4021439261     0.00     0.00  vec3_copy_into
+ 15.16     40.67     6.53  8164282     0.00     0.00  hit_world
+  2.21     41.62     0.95 3969841538     0.00     0.00  vec3_sub
+  1.16     42.12     0.50 36116048     0.00     0.00  vec3_add
+  1.02     42.56     0.44 3976005334     0.00     0.00  get_next_node
+  0.40     42.73     0.17        1     0.17     0.17  write_file
+  0.30     42.86     0.13  2000000     0.00     0.00  ray_color
+  0.14     42.92     0.06  5151550     0.00     0.00  vec3_random_in_unit_sphere
+  0.09     42.96     0.04 44322114     0.00     0.00  vec3_mul
+  0.08     43.00     0.04  6175207     0.00     0.00  vec3_element_mul
+  0.07     43.03     0.03  4424689     0.00     0.00  vec3_random_unit_vector
+  0.07     43.06     0.03  2000000     0.00     0.00  vec3_random_in_unit_circle
+  0.05     43.08     0.02  8130693     0.00     0.00  ray_at
+  0.02     43.09     0.01  8164282     0.00     0.00  reset_current_list_node
+  0.02     43.10     0.01  4424689     0.00     0.00  scatter_lambertian
+  0.02     43.11     0.01  2000000     0.00     0.00  get_ray
+  0.02     43.12     0.01  1029831     0.00     0.00  scatter_dielectric
+  0.00     43.12     0.00  8467254     0.00     0.00  vec3_len
+  0.00     43.12     0.00  6484353     0.00     0.00  vec3_norm
+  0.00     43.12     0.00  6181381     0.00     0.00  scatter
+  0.00     43.12     0.00  4424689     0.00     0.00  vec3_near_zero
+  0.00     43.12     0.00   726861     0.00     0.00  scatter_metal
+  0.00     43.12     0.00      485     0.00     0.00  add_hittable_object
+  0.00     43.12     0.00        1     0.00     0.00  init_hittable_list
+  0.00     43.12     0.00        1     0.00    43.12  render
+  0.00     43.12     0.00        1     0.00     0.00  vec3_cross
+  0.00     43.12     0.00        1     0.00     0.00  vec3_cross_new
+  0.00     43.12     0.00        1     0.00     0.00  vec3_sub_new
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.02% of 43.12 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    0.00   43.12                 main [1]
+                0.00   43.12       1/1           render [2]
+                0.00    0.00       1/1           vec3_sub_new [26]
+-----------------------------------------------
+                0.00   43.12       1/1           main [1]
+[2]    100.0    0.00   43.12       1         render [2]
+                0.13   42.61 2000000/2000000     ray_color [3]
+                0.01    0.17 2000000/2000000     get_ray [13]
+                0.17    0.00       1/1           write_file [14]
+                0.03    0.00 2000002/36116048     vec3_add [9]
+                0.00    0.00   20006/44322114     vec3_mul [19]
+                0.00    0.00     972/4021439261     vec3_copy_into [7]
+                0.00    0.00     484/11916534109     vec3_dot [6]
+                0.00    0.00     485/3969841538     vec3_sub [8]
+                0.00    0.00       2/6484353     vec3_norm [25]
+                0.00    0.00     485/485         add_hittable_object [28]
+                0.00    0.00       1/1           vec3_cross_new [31]
+                0.00    0.00       1/1           init_hittable_list [29]
+-----------------------------------------------
+                             6175207             ray_color [3]
+                0.13   42.61 2000000/2000000     render [2]
+[3]     99.1    0.13   42.61 2000000+6175207 ray_color [3]
+                6.53   35.73 8164282/8164282     hit_world [4]
+                0.00    0.28 6181381/6181381     scatter [11]
+                0.04    0.00 6175207/6175207     vec3_element_mul [21]
+                0.03    0.00 1982901/36116048     vec3_add [9]
+                0.00    0.00 3965802/44322114     vec3_mul [19]
+                0.00    0.00 1982901/8467254     vec3_len [24]
+                             6175207             ray_color [3]
+-----------------------------------------------
+                6.53   35.73 8164282/8164282     ray_color [3]
+[4]     98.0    6.53   35.73 8164282         hit_world [4]
+               12.90   22.37 3967841052/3967841052     hit_sphere [5]
+                0.44    0.00 3976005334/3976005334     get_next_node [10]
+                0.01    0.00 8164282/8164282     reset_current_list_node [23]
+-----------------------------------------------
+               12.90   22.37 3967841052/3967841052     hit_world [4]
+[5]     81.8   12.90   22.37 3967841052         hit_sphere [5]
+               13.75    0.00 11903523156/11916534109     vec3_dot [6]
+                7.39    0.00 3975971745/4021439261     vec3_copy_into [7]
+                0.95    0.00 3967841052/3969841538     vec3_sub [8]
+                0.02    0.14 8130693/8130693     ray_at [15]
+                0.11    0.00 8130693/36116048     vec3_add [9]
+                0.01    0.00 16261386/44322114     vec3_mul [19]
+-----------------------------------------------
+                0.00    0.00     484/11916534109     render [2]
+                0.00    0.00 1453722/11916534109     scatter_metal [20]
+                0.00    0.00 3089493/11916534109     scatter_dielectric [17]
+                0.01    0.00 8467254/11916534109     vec3_len [24]
+               13.75    0.00 11903523156/11916534109     hit_sphere [5]
+[6]     31.9   13.76    0.00 11916534109         vec3_dot [6]
+-----------------------------------------------
+                0.00    0.00     972/4021439261     render [2]
+                0.01    0.00 2907444/4021439261     scatter_metal [20]
+                0.02    0.00 8130693/4021439261     ray_at [15]
+                0.02    0.00 9135851/4021439261     scatter_dielectric [17]
+                0.02    0.00 12000000/4021439261     get_ray [13]
+                0.02    0.00 13292556/4021439261     scatter_lambertian [12]
+                7.39    0.00 3975971745/4021439261     hit_sphere [5]
+[7]     17.3    7.48    0.00 4021439261         vec3_copy_into [7]
+-----------------------------------------------
+                0.00    0.00       1/3969841538     vec3_sub_new [26]
+                0.00    0.00     485/3969841538     render [2]
+                0.00    0.00 2000000/3969841538     get_ray [13]
+                0.95    0.00 3967841052/3969841538     hit_sphere [5]
+[8]      2.2    0.95    0.00 3969841538         vec3_sub [8]
+-----------------------------------------------
+                0.02    0.00 1453722/36116048     scatter_metal [20]
+                0.03    0.00 1982901/36116048     ray_color [3]
+                0.03    0.00 1993348/36116048     scatter_dielectric [17]
+                0.03    0.00 2000002/36116048     render [2]
+                0.06    0.00 4424689/36116048     scatter_lambertian [12]
+                0.11    0.00 8000000/36116048     get_ray [13]
+                0.11    0.00 8130693/36116048     hit_sphere [5]
+                0.11    0.00 8130693/36116048     ray_at [15]
+[9]      1.2    0.50    0.00 36116048         vec3_add [9]
+-----------------------------------------------
+                0.44    0.00 3976005334/3976005334     hit_world [4]
+[10]     1.0    0.44    0.00 3976005334         get_next_node [10]
+-----------------------------------------------
+                0.00    0.28 6181381/6181381     ray_color [3]
+[11]     0.7    0.00    0.28 6181381         scatter [11]
+                0.01    0.17 4424689/4424689     scatter_lambertian [12]
+                0.01    0.05 1029831/1029831     scatter_dielectric [17]
+                0.00    0.04  726861/726861      scatter_metal [20]
+-----------------------------------------------
+                0.01    0.17 4424689/4424689     scatter [11]
+[12]     0.4    0.01    0.17 4424689         scatter_lambertian [12]
+                0.03    0.06 4424689/4424689     vec3_random_unit_vector [16]
+                0.06    0.00 4424689/36116048     vec3_add [9]
+                0.02    0.00 13292556/4021439261     vec3_copy_into [7]
+                0.00    0.00 4424689/4424689     vec3_near_zero [27]
+-----------------------------------------------
+                0.01    0.17 2000000/2000000     render [2]
+[13]     0.4    0.01    0.17 2000000         get_ray [13]
+                0.11    0.00 8000000/36116048     vec3_add [9]
+                0.03    0.00 2000000/2000000     vec3_random_in_unit_circle [22]
+                0.02    0.00 12000000/4021439261     vec3_copy_into [7]
+                0.01    0.00 10000000/44322114     vec3_mul [19]
+                0.00    0.00 2000000/3969841538     vec3_sub [8]
+-----------------------------------------------
+                0.17    0.00       1/1           render [2]
+[14]     0.4    0.17    0.00       1         write_file [14]
+-----------------------------------------------
+                0.02    0.14 8130693/8130693     hit_sphere [5]
+[15]     0.4    0.02    0.14 8130693         ray_at [15]
+                0.11    0.00 8130693/36116048     vec3_add [9]
+                0.02    0.00 8130693/4021439261     vec3_copy_into [7]
+                0.01    0.00 8130693/44322114     vec3_mul [19]
+-----------------------------------------------
+                0.03    0.06 4424689/4424689     scatter_lambertian [12]
+[16]     0.2    0.03    0.06 4424689         vec3_random_unit_vector [16]
+                0.05    0.00 4424689/5151550     vec3_random_in_unit_sphere [18]
+                0.00    0.01 4424689/6484353     vec3_norm [25]
+-----------------------------------------------
+                0.01    0.05 1029831/1029831     scatter [11]
+[17]     0.1    0.01    0.05 1029831         scatter_dielectric [17]
+                0.03    0.00 1993348/36116048     vec3_add [9]
+                0.02    0.00 9135851/4021439261     vec3_copy_into [7]
+                0.00    0.00 4490505/44322114     vec3_mul [19]
+                0.00    0.00 3089493/11916534109     vec3_dot [6]
+                0.00    0.00 2059662/6484353     vec3_norm [25]
+-----------------------------------------------
+                0.01    0.00  726861/5151550     scatter_metal [20]
+                0.05    0.00 4424689/5151550     vec3_random_unit_vector [16]
+[18]     0.1    0.06    0.00 5151550         vec3_random_in_unit_sphere [18]
+-----------------------------------------------
+                0.00    0.00   20006/44322114     render [2]
+                0.00    0.00 1453722/44322114     scatter_metal [20]
+                0.00    0.00 3965802/44322114     ray_color [3]
+                0.00    0.00 4490505/44322114     scatter_dielectric [17]
+                0.01    0.00 8130693/44322114     ray_at [15]
+                0.01    0.00 10000000/44322114     get_ray [13]
+                0.01    0.00 16261386/44322114     hit_sphere [5]
+[19]     0.1    0.04    0.00 44322114         vec3_mul [19]
+-----------------------------------------------
+                0.00    0.04  726861/726861      scatter [11]
+[20]     0.1    0.00    0.04  726861         scatter_metal [20]
+                0.02    0.00 1453722/36116048     vec3_add [9]
+                0.01    0.00  726861/5151550     vec3_random_in_unit_sphere [18]
+                0.01    0.00 2907444/4021439261     vec3_copy_into [7]
+                0.00    0.00 1453722/11916534109     vec3_dot [6]
+                0.00    0.00 1453722/44322114     vec3_mul [19]
+-----------------------------------------------
+                0.04    0.00 6175207/6175207     ray_color [3]
+[21]     0.1    0.04    0.00 6175207         vec3_element_mul [21]
+-----------------------------------------------
+                0.03    0.00 2000000/2000000     get_ray [13]
+[22]     0.1    0.03    0.00 2000000         vec3_random_in_unit_circle [22]
+-----------------------------------------------
+                0.01    0.00 8164282/8164282     hit_world [4]
+[23]     0.0    0.01    0.00 8164282         reset_current_list_node [23]
+-----------------------------------------------
+                0.00    0.00 1982901/8467254     ray_color [3]
+                0.00    0.01 6484353/8467254     vec3_norm [25]
+[24]     0.0    0.00    0.01 8467254         vec3_len [24]
+                0.01    0.00 8467254/11916534109     vec3_dot [6]
+-----------------------------------------------
+                0.00    0.00       2/6484353     render [2]
+                0.00    0.00 2059662/6484353     scatter_dielectric [17]
+                0.00    0.01 4424689/6484353     vec3_random_unit_vector [16]
+[25]     0.0    0.00    0.01 6484353         vec3_norm [25]
+                0.00    0.01 6484353/8467254     vec3_len [24]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[26]     0.0    0.00    0.00       1         vec3_sub_new [26]
+                0.00    0.00       1/3969841538     vec3_sub [8]
+-----------------------------------------------
+                0.00    0.00 4424689/4424689     scatter_lambertian [12]
+[27]     0.0    0.00    0.00 4424689         vec3_near_zero [27]
+-----------------------------------------------
+                0.00    0.00     485/485         render [2]
+[28]     0.0    0.00    0.00     485         add_hittable_object [28]
+-----------------------------------------------
+                0.00    0.00       1/1           render [2]
+[29]     0.0    0.00    0.00       1         init_hittable_list [29]
+-----------------------------------------------
+                0.00    0.00       1/1           vec3_cross_new [31]
+[30]     0.0    0.00    0.00       1         vec3_cross [30]
+-----------------------------------------------
+                0.00    0.00       1/1           render [2]
+[31]     0.0    0.00    0.00       1         vec3_cross_new [31]
+                0.00    0.00       1/1           vec3_cross [30]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [28] add_hittable_object    [11] scatter                [24] vec3_len
+  [10] get_next_node          [17] scatter_dielectric (scatter.c) [19] vec3_mul
+  [13] get_ray                [12] scatter_lambertian (scatter.c) [27] vec3_near_zero
+   [5] hit_sphere             [20] scatter_metal (scatter.c) [25] vec3_norm
+   [4] hit_world               [9] vec3_add               [22] vec3_random_in_unit_circle
+  [29] init_hittable_list      [7] vec3_copy_into         [18] vec3_random_in_unit_sphere
+  [15] ray_at                 [30] vec3_cross             [16] vec3_random_unit_vector
+   [3] ray_color (renderer.c) [31] vec3_cross_new          [8] vec3_sub
+   [2] render                  [6] vec3_dot               [26] vec3_sub_new
+  [23] reset_current_list_node [21] vec3_element_mul      [14] write_file
