@@ -8,6 +8,7 @@ Following raytracing in a weekend: https://raytracing.github.io/books/RayTracing
 You will need the following to run:
 - GLFW
 - OpenGL (4.1 or higher)
+- POSIX system (for pthreads)
 
 To build, simply do 
 
@@ -21,7 +22,9 @@ For running, the executable is called `main`. You can specify the resolution of 
 
 If you do not specify a resolution, it will default to 800x450.
 
-The render will be created as a .ppm file, `render.ppm`
+Running will default to 6 threads, this can be changed in main.c
+
+The render will be rendered, as well as created as a .ppm file, `render.ppm`
 
 ## Features
 - Raytracing renderer with choosable pixel samples and ray depth
