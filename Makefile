@@ -19,7 +19,7 @@ all: $(PROGS)
 BIN_NAME = main
 # Targets rely on implicit rules for compiling and linking
 
-TARGET_O_FILES = main.o ./src/fileout.o ./src/vector3.o ./src/renderer.o ./src/hittable_list.o ./src/hit.o ./src/ray.o ./src/scatter.o
+TARGET_O_FILES = main.o ./src/fileout.o ./src/vector3.o ./src/renderer.o ./src/hittable_list.o ./src/hittable_list_threadsafe.o ./src/hit.o ./src/ray.o ./src/scatter.o
 TARGET_O_FILES += ./src/graphics/graphics.o ./src/graphics/shaders/shader.o ./libs/glad/glad.o
 
 main: $(TARGET_O_FILES)

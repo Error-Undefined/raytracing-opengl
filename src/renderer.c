@@ -17,7 +17,8 @@
 #include "hittable_type.h"
 #include "hit_record.h"
 #include "hit.h"
-#include "hittable_list.h"
+//#include "hittable_list.h"
+#include "hittable_list_threadsafe.h"
 #include "scatter.h"
 #include "graphics/graphics.h"
 
@@ -38,7 +39,7 @@ static void make_triangle_norm(triangle* t)
 }
 
 
-static color ray_color(hittable_list* world, ray* r, int depth)
+static color ray_color(hittable_list_ts* world, ray* r, int depth)
 { 
   if (depth <= 0)
   {
@@ -128,7 +129,7 @@ static void* compute_rays(void* args)
   vec3* unit_horizontal = a->unit_horizontal;
   vec3* unit_vertical = a->unit_vertical;
 
-  hittable_list* world = a->world;
+  hittable_list_ts* world = a->world;
 
   for(int cur_h = 0; cur_h < h; cur_h++)
   {
@@ -286,6 +287,8 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   t2.fuzz_or_refraction = 0.1;
   t2.material = metal_material;
 
+
+  /*
   hittable_list* world = init_hittable_list(&s2, hittable_sphere);
   add_hittable_object(world, &s1, hittable_sphere);
   add_hittable_object(world, &s3, hittable_sphere);
@@ -294,6 +297,17 @@ void render(int h, int w, int samples_per_pixel, int ray_depth, struct camera* c
   // add_hittable_object(world, &t1, hittable_triangle);
   // add_hittable_object(world, &t2, hittable_triangle);
   add_hittable_object(world, &s6, hittable_sphere);
+  */
+
+  hittable_list_ts list_struct = init_hittable_list_threadsafe(&s2, hittable_sphere, 2);
+  hittable_list_ts* world = &list_struct;
+  add_hittable_object_ts(world, &s1, hittable_sphere);
+  add_hittable_object_ts(world, &s3, hittable_sphere);
+  add_hittable_object_ts(world, &s4, hittable_sphere);
+  add_hittable_object_ts(world, &s5, hittable_sphere);
+  // add_hittable_object_ts(world, &t1, hittable_triangle);
+  // add_hittable_object_ts(world, &t2, hittable_triangle);
+  add_hittable_object_ts(world, &s6, hittable_sphere);
 
   #else
   sphere ground_sphere;

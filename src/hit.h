@@ -6,9 +6,9 @@
 #include "ray.h"
 #include "hittable_type.h"
 #include "hit_record.h"
-#include "hittable_list.h"
+#include "hittable_list_threadsafe.h"
 
-bool hit_world(hittable_list* list, ray* r, double t_min, double t_max, hit_record* rec);
+bool hit_world(hittable_list_ts* list, ray* r, double t_min, double t_max, hit_record* rec);
 
 bool hit_sphere(sphere* s, ray* r, double t_min, double t_max, hit_record* rec);
 

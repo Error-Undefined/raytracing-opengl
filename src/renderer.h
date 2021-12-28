@@ -2,7 +2,7 @@
 #define RENDERER_H
 
 #include "vector3.h"
-#include "hittable_list.h"
+#include "hittable_list_threadsafe.h"
 #include "../camera.h"
 
 struct compute_rays_args
@@ -16,7 +16,7 @@ struct compute_rays_args
   
   vec3 *camera_center, *upper_left, *horizontal, *vertical, *unit_horizontal, *unit_vertical;
 
-  hittable_list* world;
+  hittable_list_ts* world;
 };
 
 

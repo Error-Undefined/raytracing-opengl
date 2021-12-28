@@ -129,15 +129,17 @@ bool hit_triangle(triangle* t, ray* r, double t_min, double t_max, hit_record* r
 
 }
 
-bool hit_world(hittable_list* list, ray* r, double t_min, double t_max, hit_record* rec)
+bool hit_world(hittable_list_ts* list, ray* r, double t_min, double t_max, hit_record* rec)
 {
   hit_record temp_record;
   bool hit_anything = false;
   double closest = t_max;
 
-  hittable_list_node* node = get_next_node(list);
-  while(node != NULL)
+  int list_size = list->size;
+
+  for(int node_it = 0; node_it < list_size; node_it++)
   {
+    hittable_list_ts_node* node = get_node_ts(list, node_it);
     if (node->object_type == hittable_sphere)
     {
       sphere* obj = (sphere*) node->object;
@@ -168,8 +170,6 @@ bool hit_world(hittable_list* list, ray* r, double t_min, double t_max, hit_reco
         rec->fuzz_or_refraction = obj->fuzz_or_refraction;
       }
     }
-    node = get_next_node(list);
   }
-  reset_current_list_node(list);
   return hit_anything;
 }
