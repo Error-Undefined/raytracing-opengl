@@ -6,7 +6,7 @@ CC  = $(CXX)
 DEPFLAGS = -MT $@ -MMD -MP -MF $*.d
 
 # Define preprocessor, compiler, and linker flags.
-CFLAGS =  -O2 -Wall -Wextra 
+CFLAGS =  -O3 -Wall -Wextra 
 #CFLAGS += -g
 CFLAGS += $(DEPFLAGS)
 LDFLAGS = -lm -lpthread -ldl -lglfw

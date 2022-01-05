@@ -10,7 +10,6 @@
 
 bool hit_sphere(sphere* s, ray* r, double t_min, double t_max, hit_record* rec)
 {
-
   vec3 oc;
   vec3_copy_into(&oc, &r->origin);
   vec3_sub(&oc, &s->center);

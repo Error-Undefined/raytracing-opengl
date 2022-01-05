@@ -115,6 +115,8 @@ ray get_ray(double u, double v, double aperture, vec3* camera_center, vec3* uppe
 
 static void* compute_rays(void* args)
 {
+  time_t t1, t0;
+
   struct compute_rays_args* a = (struct compute_rays_args*) args;
   int w = a->w;
   int h = a->h;
@@ -137,6 +139,11 @@ static void* compute_rays(void* args)
   int index_start = a->index_start;
 
   int cur_w = index_start;
+
+  if(index_start == 0)
+  {
+    t0 = time(NULL);
+  }
 
   for(int cur_h = 0; cur_h < h; cur_h++)
   {
@@ -169,6 +176,12 @@ static void* compute_rays(void* args)
     }
     cur_w = (cur_w % w);
   }
+  if(index_start == 0)
+  {
+    t1 = time(NULL);
+    printf("Rendering took %ld seconds\n", t1-t0);
+  }
+
   return NULL;
 }
 
@@ -183,7 +196,7 @@ void render(int threads, int h, int w, int samples_per_pixel, int ray_depth, str
   {
     camera = &default_camera;
     default_camera.aperture = 0.1;
-    default_camera.camera_center = (vec3) {0,0,0};
+    default_camera.camera_center = (vec3) {0,-2,-1};
     default_camera.camera_up = (vec3) {0,-1,0};
     default_camera.focal_length = 1.5;
     default_camera.focus_distance = 0.7;
@@ -405,7 +418,7 @@ void render(int threads, int h, int w, int samples_per_pixel, int ray_depth, str
   #endif // RANDOM_SCENE
 
   // Allocate the image buffer
-  int_color* image_buf = calloc(h*w, sizeof(int_color));
+  int_color* image_buf = (int_color*) calloc(h*w, sizeof(int_color));
 
   struct compute_rays_args compute_args;
   struct compute_rays_args* a = &compute_args;

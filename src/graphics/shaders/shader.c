@@ -31,7 +31,7 @@ static int shader_compile(const char* shader_path, unsigned int* shader, GLenum 
     file_size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
 
-    shader_code = malloc(file_size + 1*sizeof(char));
+    shader_code = (char*) malloc(file_size + 1*sizeof(char));
     if (shader_code == NULL)
     {
         fprintf(stderr, "Could not alloc RAM for shader\n");

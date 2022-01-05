@@ -5,14 +5,14 @@
 
 hittable_list* init_hittable_list(void* object_data, hittable_type obj_type)
 {
-  hittable_list* list = calloc(1, sizeof(hittable_list));
+  hittable_list* list = (hittable_list*) calloc(1, sizeof(hittable_list));
   
   if (list == NULL)
   {
     return NULL;
   }
   
-  struct hittable_list_node* list_node = calloc(1, sizeof(struct hittable_list_node));
+  struct hittable_list_node* list_node = (struct hittable_list_node*) calloc(1, sizeof(struct hittable_list_node));
   if(list_node == NULL)
   {
     free(list);
@@ -33,7 +33,7 @@ hittable_list* init_hittable_list(void* object_data, hittable_type obj_type)
 
 int add_hittable_object(struct hittable_list* list, void* obj_data, hittable_type obj_type)
 {
-  struct hittable_list_node* next_node = malloc(sizeof(struct hittable_list_node));
+  struct hittable_list_node* next_node = (struct hittable_list_node*) malloc(sizeof(struct hittable_list_node));
   if (next_node == NULL)
   {
     return -1;

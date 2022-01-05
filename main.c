@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   ProfilerStart("test.log");
   #endif //PROFILE_CODE
 
-  int samples_per_pixel = 32;
+  int samples_per_pixel = 50;
   int ray_depth = 30;
   int threads = 6;
 
@@ -30,13 +30,10 @@ int main(int argc, char** argv)
   c.focus_distance = 1.3;
   c.img_plane_height = 2.0;
 
-  int t0 = time(NULL);
   if (argc < 3)
   { 
     //Render for example at 16:9 ratio, 800x450 now
-    render(threads, 450, 800, 70, 10, NULL);
-    int t1 = time(NULL);
-    printf("Rendering took %d seconds\n", t1-t0);
+    render(threads, 450, 800, 50, 10, NULL);
     exit(0);
   }
   int h = atoi(argv[1]);
@@ -47,8 +44,6 @@ int main(int argc, char** argv)
     exit(1);
   }
   render(threads, h, w, samples_per_pixel, ray_depth, &c);
-  int t1 = time(NULL);
-  printf("Rendering took %d seconds\n", t1-t0);
 
   #ifdef PROFILE_CODE
   #include <gperftools/profiler.h>
