@@ -9,6 +9,7 @@ main
 *.ppm
 *.log
 *.jpg
+*.txt
 
 #macos
 .DS_store
